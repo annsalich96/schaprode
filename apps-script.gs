@@ -37,6 +37,39 @@ function doPost(e) {
   }
 }
 
+function doGet(e) {
+  var sheet   = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var lastRow = sheet.getLastRow();
+  var rows    = [];
+
+  if (lastRow > 1) {
+    var data = sheet.getRange(2, 1, lastRow - 1, 6).getValues();
+    for (var i = 0; i < data.length; i++) {
+      rows.push({
+        timestamp:    data[i][0],
+        name:         data[i][1],
+        email:        data[i][2],
+        phone:        data[i][3],
+        field:        data[i][4],
+        contribution: data[i][5]
+      });
+    }
+  }
+
+  var json     = JSON.stringify(rows);
+  var callback = e.parameter.callback;
+
+  if (callback) {
+    return ContentService
+      .createTextOutput(callback + '(' + json + ')')
+      .setMimeType(ContentService.MimeType.JAVASCRIPT);
+  }
+
+  return ContentService
+    .createTextOutput(json)
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
 // Test-Funktion — direkt in Apps Script ausführen um die Verbindung zu prüfen
 function test() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();

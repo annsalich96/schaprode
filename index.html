@@ -223,6 +223,78 @@
             line-height: 1.7;
         }
 
+        /* ── Entries Section ── */
+        .entries-section {
+            border-top: 1px solid var(--gray-mid);
+            padding: 64px 24px 96px;
+        }
+
+        .entries-inner {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        .entries-header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 0;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--gray-mid);
+        }
+
+        .entries-header h2 {
+            font-size: 22px;
+            font-weight: 300;
+            letter-spacing: -0.01em;
+        }
+
+        .entry-count {
+            font-size: 11px;
+            color: var(--gray-text);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .entries-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .entries-table th {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--gray-text);
+            text-align: left;
+            padding: 20px 24px 14px 0;
+        }
+
+        .entries-table td {
+            font-size: 14px;
+            padding: 18px 24px 18px 0;
+            border-top: 1px solid var(--gray-light);
+            vertical-align: top;
+            line-height: 1.55;
+        }
+
+        .entries-table td.muted {
+            color: var(--gray-text);
+            font-size: 13px;
+        }
+
+        .entries-status {
+            font-size: 14px;
+            color: var(--gray-text);
+            padding: 40px 0;
+        }
+
+        @media (max-width: 700px) {
+            .entries-table th:nth-child(n+4),
+            .entries-table td:nth-child(n+4) { display: none; }
+        }
+
         /* ── Responsive ── */
         @media (max-width: 560px) {
             header  { padding: 20px 24px; }
@@ -302,23 +374,33 @@
     </div>
 </main>
 
+<section class="entries-section">
+    <div class="entries-inner">
+        <div class="entries-header">
+            <h2>Netzwerk</h2>
+            <span class="entry-count" id="entryCount"></span>
+        </div>
+        <div id="entriesContainer">
+            <p class="entries-status">Wird geladen …</p>
+        </div>
+    </div>
+</section>
+
 <footer>
     <span>&copy; 2026 ANN Architecture Studio</span>
     <span>SCHAPRODE</span>
 </footer>
 
 <script>
-    // ── HIER DEINE APPS SCRIPT URL EINTRAGEN ──────────────────────────────────
     const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzFkNJDCXOfx3gOLhhbdbdQRFYqnJfSSJHTUyDS-WeJwcNbo8rSOWz7Dl_xx8rPd2K5/exec';
-    // ──────────────────────────────────────────────────────────────────────────
 
-    const form       = document.getElementById('networkForm');
-    const submitBtn  = document.getElementById('submitBtn');
-    const statusMsg  = document.getElementById('statusMsg');
+    const form      = document.getElementById('networkForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const statusMsg = document.getElementById('statusMsg');
 
+    // ── Formular absenden ──
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
-
         submitBtn.disabled = true;
         statusMsg.textContent = 'Wird gespeichert …';
         statusMsg.className = 'status';
@@ -340,9 +422,9 @@
                 body: JSON.stringify(payload)
             });
 
-            // no-cors returns opaque response — assume success if no network error
             document.getElementById('formSection').style.display = 'none';
             document.getElementById('successScreen').style.display = 'block';
+            setTimeout(loadEntries, 1500);
 
         } catch (err) {
             statusMsg.textContent = 'Verbindungsfehler — bitte versuche es erneut.';
@@ -350,6 +432,60 @@
             submitBtn.disabled = false;
         }
     });
+
+    // ── Einträge laden via JSONP ──
+    function esc(str) {
+        if (!str) return '—';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    window.handleEntries = function(data) {
+        const container = document.getElementById('entriesContainer');
+        const countEl   = document.getElementById('entryCount');
+
+        if (!data || data.length === 0) {
+            container.innerHTML = '<p class="entries-status">Noch keine Einträge.</p>';
+            countEl.textContent = '';
+            return;
+        }
+
+        countEl.textContent = data.length + (data.length === 1 ? ' Person' : ' Personen');
+
+        let html = `<table class="entries-table">
+            <thead><tr>
+                <th>Name</th><th>Berufsfeld</th><th>Beitrag</th>
+                <th>E-Mail</th><th>Telefon</th><th>Datum</th>
+            </tr></thead><tbody>`;
+
+        [...data].reverse().forEach(row => {
+            html += `<tr>
+                <td>${esc(row.name)}</td>
+                <td>${esc(row.field)}</td>
+                <td class="muted">${esc(row.contribution)}</td>
+                <td class="muted">${esc(row.email)}</td>
+                <td class="muted">${esc(row.phone)}</td>
+                <td class="muted">${esc(row.timestamp)}</td>
+            </tr>`;
+        });
+
+        html += '</tbody></table>';
+        container.innerHTML = html;
+    };
+
+    function loadEntries() {
+        const old = document.getElementById('jsonpScript');
+        if (old) old.remove();
+        const script = document.createElement('script');
+        script.id  = 'jsonpScript';
+        script.src = APPS_SCRIPT_URL + '?callback=handleEntries&t=' + Date.now();
+        document.head.appendChild(script);
+    }
+
+    loadEntries();
 </script>
 
 </body>
