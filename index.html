@@ -37,11 +37,10 @@
             justify-content: space-between;
         }
 
-        .logo-main {
-            font-size: 15px;
-            font-weight: 700;
-            letter-spacing: 0.25em;
-            text-transform: uppercase;
+        .logo-main img {
+            height: 36px;
+            width: auto;
+            display: block;
         }
 
         .logo-sub {
@@ -309,14 +308,14 @@
 <body>
 
 <header>
-    <div class="logo-main">SCHAPRODE</div>
+    <div class="logo-main"><img src="Monogram.png" alt="ANN Architecture Studio"></div>
     <div class="logo-sub">ANN Architecture Studio</div>
 </header>
 
 <main>
     <div id="formSection">
         <div class="headline">
-            <h1>Werde Teil<br>des Netzwerks</h1>
+            <h1>Schaprode Ausstellung</h1>
             <p>Trag dich ein und lass uns wissen, wie du beitragen kannst.</p>
         </div>
 
@@ -338,20 +337,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="field">Berufsfeld</label>
-                    <select id="field" name="field" required>
-                        <option value="" disabled selected>Bitte wählen</option>
-                        <option>Architektur</option>
-                        <option>Innenarchitektur</option>
-                        <option>Stadtplanung</option>
-                        <option>Bauingenieurwesen</option>
-                        <option>Landschaftsarchitektur</option>
-                        <option>Design</option>
-                        <option>Handwerk / Ausführung</option>
-                        <option>Recht / Verwaltung</option>
-                        <option>Marketing / Kommunikation</option>
-                        <option>Anderes</option>
-                    </select>
+                    <label for="field">Berufsfeld / Hintergrund</label>
+                    <input type="text" id="field" name="field" placeholder="z.B. Architektur, Design, Recht …" required>
                 </div>
 
                 <div class="form-group full">
