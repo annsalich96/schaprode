@@ -37,6 +37,20 @@
             flex-direction: column;
         }
 
+        /* ─────────────────────────────
+           GRID — 4 Spalten, gleiche Basis
+           wie DESIGN RULES/tokens.css
+        ───────────────────────────── */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            column-gap: var(--gutter);
+            padding: 0 var(--margin);
+        }
+
+        .col-2 { grid-column: span 2; }
+        .col-4 { grid-column: span 4; }
+
         /* ── Header ── */
         header {
             padding: 28px var(--margin);
@@ -46,11 +60,7 @@
             justify-content: space-between;
         }
 
-        .logo img {
-            height: 32px;
-            width: auto;
-            display: block;
-        }
+        .logo img { height: 32px; width: auto; display: block; }
 
         .logo-name {
             font-size: 11px;
@@ -59,20 +69,9 @@
             color: var(--gray-600);
         }
 
-        /* ── Main — 2+2 Layout ── */
-        main {
-            flex: 1;
-            padding: 80px var(--margin) 96px;
-        }
+        /* ── Form-Sektion ── */
+        #formSection .grid { padding-top: 80px; padding-bottom: 96px; }
 
-        .form-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: var(--gutter);
-            align-items: start;
-        }
-
-        /* ── Links: Titel + Beschreibung ── */
         .page-label {
             font-size: 10px;
             font-weight: 600;
@@ -94,16 +93,16 @@
             font-size: 15px;
             color: var(--gray-600);
             line-height: 1.75;
-            max-width: 340px;
         }
 
-        /* ── Rechts: Formular ── */
+        /* ── Formular — benutzt die selben Spaltenbreiten wie das Grid ── */
         .form-group { margin-bottom: 36px; }
 
+        /* 2 nebeneinander = Spalte 3 + Spalte 4 des Haupt-Grids */
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 0 var(--gutter);
+            column-gap: var(--gutter);
         }
 
         label {
@@ -134,11 +133,7 @@
         input::placeholder, textarea::placeholder { color: var(--gray-400); }
         input:focus, textarea:focus { border-bottom-color: var(--black); }
 
-        textarea {
-            resize: vertical;
-            min-height: 100px;
-            line-height: 1.65;
-        }
+        textarea { resize: vertical; min-height: 100px; line-height: 1.65; }
 
         .submit-row {
             display: flex;
@@ -163,14 +158,14 @@
         button[type="submit"]:hover    { opacity: 0.65; }
         button[type="submit"]:disabled { opacity: 0.35; cursor: not-allowed; }
 
-        .status             { font-size: 13px; color: var(--gray-600); }
-        .status.success     { color: var(--success); }
-        .status.error       { color: var(--error); }
+        .status         { font-size: 13px; color: var(--gray-600); }
+        .status.success { color: var(--success); }
+        .status.error   { color: var(--error); }
 
         /* ── Danke-Seite ── */
         #successScreen {
             display: none;
-            padding: 48px 0;
+            padding: 80px var(--margin) 96px;
         }
 
         #successScreen h2 {
@@ -179,6 +174,7 @@
             letter-spacing: -0.02em;
             line-height: 1.15;
             margin-bottom: 20px;
+            max-width: 50%;
         }
 
         #successScreen p {
@@ -187,21 +183,21 @@
             line-height: 1.75;
         }
 
-        /* ── Einträge ── */
-        .entries-section {
-            border-top: 1px solid var(--gray-200);
-            padding: 64px var(--margin) 96px;
-        }
+        /* ── Einträge — gleicher Grid, selbe Spaltenlinien ── */
+        .entries-section { border-top: 1px solid var(--gray-200); flex: 1; }
 
-        .entries-header {
+        /* Header-Zeile: "Netzwerk" + Personenanzahl */
+        .entries-head {
+            padding-top: 64px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--gray-200);
+            margin-bottom: 0;
             display: flex;
             align-items: baseline;
             justify-content: space-between;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--gray-200);
         }
 
-        .entries-header h2 {
+        .entries-head h2 {
             font-size: 22px;
             font-weight: 700;
             letter-spacing: -0.01em;
@@ -215,35 +211,33 @@
             color: var(--gray-600);
         }
 
-        .entries-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .entries-table th {
+        /* Spalten-Header der Eintrags-Liste */
+        .entry-col-header {
             font-size: 10px;
             font-weight: 600;
             letter-spacing: 0.14em;
             text-transform: uppercase;
             color: var(--gray-600);
-            text-align: left;
-            padding: 20px 32px 16px 0;
+            padding: 20px 0 16px;
         }
 
-        .entries-table td {
+        /* Eintrags-Zellen — jede in einer Grid-Spalte */
+        .entry-cell {
             font-size: 14px;
-            padding: 20px 32px 20px 0;
+            color: var(--black);
+            padding: 20px 0;
             border-top: 1px solid var(--gray-100);
-            vertical-align: top;
             line-height: 1.55;
+            vertical-align: top;
         }
 
-        .entries-table td.muted {
+        .entry-cell.muted {
             color: var(--gray-600);
             font-size: 13px;
         }
 
         .entries-status {
+            grid-column: span 4;
             font-size: 14px;
             color: var(--gray-600);
             padding: 40px 0;
@@ -259,21 +253,27 @@
             letter-spacing: 0.14em;
             text-transform: uppercase;
             color: var(--gray-600);
+            margin-top: 64px;
         }
 
         /* ── Responsive ── */
         @media (max-width: 900px) {
             :root { --margin: 40px; --gutter: 32px; }
-            .form-section { grid-template-columns: 1fr; gap: 56px; }
-            .page-desc { max-width: none; }
+            .grid { grid-template-columns: repeat(2, 1fr); }
+            .col-2 { grid-column: span 2; }
+            .col-4 { grid-column: span 2; }
+            h1 { font-size: 28px; }
         }
 
         @media (max-width: 560px) {
             :root { --margin: 20px; --gutter: 24px; }
-            h1 { font-size: 28px; }
+            .grid { grid-template-columns: 1fr; }
+            .col-2, .col-4 { grid-column: span 1; }
             .form-row { grid-template-columns: 1fr; }
-            .entries-table th:nth-child(n+3),
-            .entries-table td:nth-child(n+3) { display: none; }
+            #successScreen h2 { max-width: none; font-size: 28px; }
+            .entry-col-header:nth-child(n+3),
+            .entry-cell:nth-child(4n+3),
+            .entry-cell:nth-child(4n)   { display: none; }
             footer { flex-direction: column; gap: 8px; }
         }
     </style>
@@ -285,16 +285,20 @@
     <div class="logo-name">ANN Architecture Solution</div>
 </header>
 
-<main>
-    <div id="formSection" class="form-section">
-        <div>
+<!-- Form-Sektion -->
+<div id="formSection">
+    <div class="grid">
+        <!-- Spalte 1+2: Titel & Beschreibung -->
+        <div class="col-2">
             <p class="page-label">Schaprode · Ausstellung · 2026</p>
             <h1>Trag dich<br>ins Netzwerk ein.</h1>
             <p class="page-desc">Lass uns wissen, wer du bist und wie du zum Projekt beitragen kannst.</p>
         </div>
 
-        <div>
+        <!-- Spalte 3+4: Formular -->
+        <div class="col-2">
             <form id="networkForm">
+                <!-- Zeile 1: Name | E-Mail  →  Spalte 3 | Spalte 4 -->
                 <div class="form-row">
                     <div class="form-group">
                         <label for="name">Name</label>
@@ -306,6 +310,7 @@
                     </div>
                 </div>
 
+                <!-- Zeile 2: Telefon | Berufsfeld  →  Spalte 3 | Spalte 4 -->
                 <div class="form-row">
                     <div class="form-group">
                         <label for="phone">Telefon</label>
@@ -317,6 +322,7 @@
                     </div>
                 </div>
 
+                <!-- Zeile 3: Beitrag — volle Breite von Spalte 3+4 -->
                 <div class="form-group">
                     <label for="contribution">Was kann ich beitragen</label>
                     <textarea id="contribution" name="contribution"
@@ -330,19 +336,26 @@
             </form>
         </div>
     </div>
+</div>
 
-    <div id="successScreen">
-        <h2>Danke für<br>deinen Eintrag.</h2>
-        <p>Wir melden uns bei dir.</p>
-    </div>
-</main>
+<!-- Danke-Seite -->
+<div id="successScreen">
+    <h2>Danke für<br>deinen Eintrag.</h2>
+    <p>Wir melden uns bei dir.</p>
+</div>
 
+<!-- Einträge — gleicher Grid wie oben -->
 <section class="entries-section">
-    <div class="entries-header">
-        <h2>Netzwerk</h2>
-        <span class="entry-count" id="entryCount"></span>
+    <!-- Header-Zeile im Grid -->
+    <div class="grid">
+        <div class="col-4 entries-head">
+            <h2>Netzwerk</h2>
+            <span class="entry-count" id="entryCount"></span>
+        </div>
     </div>
-    <div id="entriesContainer">
+
+    <!-- Einträge-Grid: Spaltenheader + Zeilen, gleiche Linien wie oben -->
+    <div class="grid" id="entriesContainer">
         <p class="entries-status">Wird geladen …</p>
     </div>
 </section>
@@ -414,21 +427,21 @@
 
         countEl.textContent = data.length + (data.length === 1 ? ' Person' : ' Personen');
 
-        let html = `<table class="entries-table">
-            <thead><tr>
-                <th>Name</th><th>Berufsfeld</th><th>E-Mail</th><th>Beitrag</th>
-            </tr></thead><tbody>`;
+        // Grid-Divs statt Tabelle — jede Zelle sitzt auf einer Grid-Spalte
+        let html =
+            '<div class="entry-col-header">Name</div>' +
+            '<div class="entry-col-header">Berufsfeld</div>' +
+            '<div class="entry-col-header">E-Mail</div>' +
+            '<div class="entry-col-header">Beitrag</div>';
 
         [...data].reverse().forEach(row => {
-            html += `<tr>
-                <td>${esc(row.name)}</td>
-                <td class="muted">${esc(row.field)}</td>
-                <td class="muted">${esc(row.email)}</td>
-                <td class="muted">${esc(row.contribution)}</td>
-            </tr>`;
+            html +=
+                `<div class="entry-cell">${esc(row.name)}</div>` +
+                `<div class="entry-cell muted">${esc(row.field)}</div>` +
+                `<div class="entry-cell muted">${esc(row.email)}</div>` +
+                `<div class="entry-cell muted">${esc(row.contribution)}</div>`;
         });
 
-        html += '</tbody></table>';
         container.innerHTML = html;
     }
 
