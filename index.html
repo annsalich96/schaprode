@@ -290,8 +290,8 @@
         }
 
         @media (max-width: 700px) {
-            .entries-table th:nth-child(n+4),
-            .entries-table td:nth-child(n+4) { display: none; }
+            .entries-table th:nth-child(n+3),
+            .entries-table td:nth-child(n+3) { display: none; }
         }
 
         /* ── Responsive ── */
@@ -444,18 +444,15 @@
 
         let html = `<table class="entries-table">
             <thead><tr>
-                <th>Name</th><th>Berufsfeld</th><th>Beitrag</th>
-                <th>E-Mail</th><th>Telefon</th><th>Datum</th>
+                <th>Name</th><th>Berufsfeld</th><th>E-Mail</th><th>Beitrag</th>
             </tr></thead><tbody>`;
 
         [...data].reverse().forEach(row => {
             html += `<tr>
                 <td>${esc(row.name)}</td>
                 <td>${esc(row.field)}</td>
-                <td class="muted">${esc(row.contribution)}</td>
                 <td class="muted">${esc(row.email)}</td>
-                <td class="muted">${esc(row.phone)}</td>
-                <td class="muted">${esc(row.timestamp)}</td>
+                <td class="muted">${esc(row.contribution)}</td>
             </tr>`;
         });
 
