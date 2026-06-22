@@ -56,8 +56,17 @@ function doGet(e) {
     }
   }
 
+  var json     = JSON.stringify(rows);
+  var callback = e.parameter.callback;
+
+  if (callback) {
+    return ContentService
+      .createTextOutput(callback + '(' + json + ')')
+      .setMimeType(ContentService.MimeType.JAVASCRIPT);
+  }
+
   return ContentService
-    .createTextOutput(JSON.stringify(rows))
+    .createTextOutput(json)
     .setMimeType(ContentService.MimeType.JSON);
 }
 

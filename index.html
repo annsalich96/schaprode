@@ -463,17 +463,21 @@
         container.innerHTML = html;
     }
 
-    async function loadEntries() {
-        try {
-            const res  = await fetch(APPS_SCRIPT_URL);
-            const data = await res.json();
-            renderEntries(data);
-        } catch (err) {
+    function loadEntries() {
+        const old = document.getElementById('jsonpScript');
+        if (old) old.remove();
+
+        const script  = document.createElement('script');
+        script.id     = 'jsonpScript';
+        script.onerror = () => {
             document.getElementById('entriesContainer').innerHTML =
                 '<p class="entries-status">Fehler beim Laden — bitte Seite neu laden.</p>';
-        }
+        };
+        script.src = APPS_SCRIPT_URL + '?callback=renderEntries&t=' + Date.now();
+        document.head.appendChild(script);
     }
 
+    window.renderEntries = renderEntries;
     loadEntries();
 </script>
 
