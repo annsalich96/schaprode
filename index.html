@@ -10,26 +10,28 @@
         @font-face { font-family: 'Rota'; src: url('../DESIGN RULES/FONTS/Rota Complete Family/Rota-Medium.otf') format('opentype'); font-weight: 500; font-style: normal; }
         @font-face { font-family: 'Rota'; src: url('../DESIGN RULES/FONTS/Rota Complete Family/Rota-SemiBold.otf') format('opentype'); font-weight: 600; font-style: normal; }
         @font-face { font-family: 'Rota'; src: url('../DESIGN RULES/FONTS/Rota Complete Family/Rota-Bold.otf') format('opentype'); font-weight: 700; font-style: normal; }
-    </style>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --black:      #0A0A0A;
-            --white:      #FFFFFF;
-            --gray-light: #F5F5F3;
-            --gray-mid:   #E0DDD8;
-            --gray-text:  #8C8C8C;
+            --black:    #0A0A0A;
+            --white:    #FFFFFF;
+            --gray-100: #F5F5F3;
+            --gray-200: #E0DDD8;
+            --gray-400: #C8C5BF;
+            --gray-600: #8C8C8C;
+            --success:  #4A7C59;
+            --error:    #B0291E;
+            --font:     'Rota', -apple-system, BlinkMacSystemFont, sans-serif;
+            --margin:   64px;
+            --gutter:   48px;
         }
 
         body {
-            font-family: 'Rota', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: var(--font);
             background: var(--white);
             color: var(--black);
+            -webkit-font-smoothing: antialiased;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -37,68 +39,71 @@
 
         /* ── Header ── */
         header {
-            padding: 32px 48px;
-            border-bottom: 1px solid var(--gray-mid);
+            padding: 28px var(--margin);
+            border-bottom: 1px solid var(--gray-200);
             display: flex;
-            align-items: baseline;
+            align-items: center;
             justify-content: space-between;
         }
 
-        .logo-main img {
-            height: 36px;
+        .logo img {
+            height: 32px;
             width: auto;
             display: block;
         }
 
-        .logo-sub {
+        .logo-name {
             font-size: 11px;
             letter-spacing: 0.18em;
             text-transform: uppercase;
-            color: var(--gray-text);
-            font-weight: 400;
+            color: var(--gray-600);
         }
 
-        /* ── Main ── */
+        /* ── Main — 2+2 Layout ── */
         main {
             flex: 1;
-            max-width: 680px;
-            margin: 0 auto;
-            width: 100%;
-            padding: 72px 24px 96px;
+            padding: 80px var(--margin) 96px;
         }
 
-        .headline {
-            margin-bottom: 56px;
-        }
-
-        .headline h1 {
-            font-size: 36px;
-            font-weight: 300;
-            letter-spacing: -0.02em;
-            line-height: 1.15;
-            margin-bottom: 18px;
-        }
-
-        .headline p {
-            font-size: 15px;
-            color: var(--gray-text);
-            line-height: 1.75;
-            max-width: 440px;
-        }
-
-        /* ── Form ── */
-        .form-grid {
+        .form-section {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 0 40px;
+            gap: var(--gutter);
+            align-items: start;
         }
 
-        .form-group {
-            margin-bottom: 36px;
+        /* ── Links: Titel + Beschreibung ── */
+        .page-label {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--gray-600);
+            margin-bottom: 24px;
         }
 
-        .form-group.full {
-            grid-column: 1 / -1;
+        h1 {
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+            margin-bottom: 28px;
+        }
+
+        .page-desc {
+            font-size: 15px;
+            color: var(--gray-600);
+            line-height: 1.75;
+            max-width: 340px;
+        }
+
+        /* ── Rechts: Formular ── */
+        .form-group { margin-bottom: 36px; }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0 var(--gutter);
         }
 
         label {
@@ -107,159 +112,107 @@
             font-weight: 600;
             letter-spacing: 0.16em;
             text-transform: uppercase;
-            color: var(--gray-text);
+            color: var(--gray-600);
             margin-bottom: 12px;
         }
 
-        input,
-        select,
-        textarea {
+        input, textarea {
             width: 100%;
             padding: 12px 0;
             border: none;
-            border-bottom: 1px solid var(--gray-mid);
+            border-bottom: 1px solid var(--gray-200);
             background: transparent;
             font-size: 15px;
             font-family: inherit;
             color: var(--black);
             outline: none;
-            transition: border-color 0.2s;
+            transition: border-color 0.15s;
             border-radius: 0;
             -webkit-appearance: none;
         }
 
-        input::placeholder,
-        textarea::placeholder {
-            color: #C8C5BF;
-        }
-
-        input:focus,
-        select:focus,
-        textarea:focus {
-            border-bottom-color: var(--black);
-        }
-
-        select {
-            cursor: pointer;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%238C8C8C' stroke-width='1.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 2px center;
-            padding-right: 20px;
-        }
-
-        select option[value=""] {
-            color: #C8C5BF;
-        }
+        input::placeholder, textarea::placeholder { color: var(--gray-400); }
+        input:focus, textarea:focus { border-bottom-color: var(--black); }
 
         textarea {
             resize: vertical;
-            min-height: 110px;
+            min-height: 100px;
             line-height: 1.65;
         }
 
-        /* ── Submit ── */
         .submit-row {
-            margin-top: 12px;
             display: flex;
             align-items: center;
-            gap: 28px;
+            gap: 24px;
+            margin-top: 8px;
         }
 
         button[type="submit"] {
             background: var(--black);
             color: var(--white);
             border: none;
-            padding: 16px 44px;
-            font-size: 11px;
+            padding: 16px 40px;
+            font-size: 10px;
             font-weight: 600;
             letter-spacing: 0.18em;
             text-transform: uppercase;
             cursor: pointer;
-            transition: opacity 0.2s;
             font-family: inherit;
+            transition: opacity 0.15s;
         }
+        button[type="submit"]:hover    { opacity: 0.65; }
+        button[type="submit"]:disabled { opacity: 0.35; cursor: not-allowed; }
 
-        button[type="submit"]:hover {
-            opacity: 0.65;
-        }
+        .status             { font-size: 13px; color: var(--gray-600); }
+        .status.success     { color: var(--success); }
+        .status.error       { color: var(--error); }
 
-        button[type="submit"]:disabled {
-            opacity: 0.35;
-            cursor: not-allowed;
-        }
-
-        .status {
-            font-size: 13px;
-            color: var(--gray-text);
-            line-height: 1.5;
-        }
-
-        .status.success { color: #4A7C59; }
-        .status.error   { color: #B0291E; }
-
-        /* ── Footer ── */
-        footer {
-            padding: 24px 48px;
-            border-top: 1px solid var(--gray-mid);
-            font-size: 10px;
-            color: var(--gray-text);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        /* ── Success Screen ── */
+        /* ── Danke-Seite ── */
         #successScreen {
             display: none;
-            text-align: center;
-            padding: 80px 24px;
+            padding: 48px 0;
         }
 
         #successScreen h2 {
-            font-size: 28px;
-            font-weight: 300;
-            letter-spacing: -0.01em;
-            margin-bottom: 16px;
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+            margin-bottom: 20px;
         }
 
         #successScreen p {
             font-size: 15px;
-            color: var(--gray-text);
-            line-height: 1.7;
+            color: var(--gray-600);
+            line-height: 1.75;
         }
 
-        /* ── Entries Section ── */
+        /* ── Einträge ── */
         .entries-section {
-            border-top: 1px solid var(--gray-mid);
-            padding: 64px 24px 96px;
-        }
-
-        .entries-inner {
-            max-width: 960px;
-            margin: 0 auto;
+            border-top: 1px solid var(--gray-200);
+            padding: 64px var(--margin) 96px;
         }
 
         .entries-header {
             display: flex;
             align-items: baseline;
             justify-content: space-between;
-            margin-bottom: 0;
             padding-bottom: 20px;
-            border-bottom: 1px solid var(--gray-mid);
+            border-bottom: 1px solid var(--gray-200);
         }
 
         .entries-header h2 {
             font-size: 22px;
-            font-weight: 300;
+            font-weight: 700;
             letter-spacing: -0.01em;
         }
 
         .entry-count {
-            font-size: 11px;
-            color: var(--gray-text);
-            letter-spacing: 0.1em;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.14em;
             text-transform: uppercase;
+            color: var(--gray-600);
         }
 
         .entries-table {
@@ -272,117 +225,131 @@
             font-weight: 600;
             letter-spacing: 0.14em;
             text-transform: uppercase;
-            color: var(--gray-text);
+            color: var(--gray-600);
             text-align: left;
-            padding: 20px 24px 14px 0;
+            padding: 20px 32px 16px 0;
         }
 
         .entries-table td {
             font-size: 14px;
-            padding: 18px 24px 18px 0;
-            border-top: 1px solid var(--gray-light);
+            padding: 20px 32px 20px 0;
+            border-top: 1px solid var(--gray-100);
             vertical-align: top;
             line-height: 1.55;
         }
 
         .entries-table td.muted {
-            color: var(--gray-text);
+            color: var(--gray-600);
             font-size: 13px;
         }
 
         .entries-status {
             font-size: 14px;
-            color: var(--gray-text);
+            color: var(--gray-600);
             padding: 40px 0;
         }
 
-        @media (max-width: 700px) {
-            .entries-table th:nth-child(n+3),
-            .entries-table td:nth-child(n+3) { display: none; }
+        /* ── Footer ── */
+        footer {
+            padding: 24px var(--margin);
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--gray-600);
         }
 
         /* ── Responsive ── */
+        @media (max-width: 900px) {
+            :root { --margin: 40px; --gutter: 32px; }
+            .form-section { grid-template-columns: 1fr; gap: 56px; }
+            .page-desc { max-width: none; }
+        }
+
         @media (max-width: 560px) {
-            header  { padding: 20px 24px; }
-            footer  { padding: 20px 24px; flex-direction: column; gap: 8px; }
-            main    { padding: 48px 24px 72px; }
-            .form-grid { grid-template-columns: 1fr; }
-            .form-group.full { grid-column: 1; }
-            .headline h1 { font-size: 28px; }
+            :root { --margin: 20px; --gutter: 24px; }
+            h1 { font-size: 28px; }
+            .form-row { grid-template-columns: 1fr; }
+            .entries-table th:nth-child(n+3),
+            .entries-table td:nth-child(n+3) { display: none; }
+            footer { flex-direction: column; gap: 8px; }
         }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="logo-main"><img src="Monogram.png" alt="ANN Architecture Solution"></div>
-    <div class="logo-sub">ANN Architecture Solution</div>
+    <div class="logo"><img src="Monogram.png" alt="ANN Architecture Solution"></div>
+    <div class="logo-name">ANN Architecture Solution</div>
 </header>
 
 <main>
-    <div id="formSection">
-        <div class="headline">
-            <h1>Schaprode Ausstellung</h1>
-            <p>Trag dich ein und lass uns wissen, wie du beitragen kannst.</p>
+    <div id="formSection" class="form-section">
+        <div>
+            <p class="page-label">Schaprode · Ausstellung · 2026</p>
+            <h1>Trag dich<br>ins Netzwerk ein.</h1>
+            <p class="page-desc">Lass uns wissen, wer du bist und wie du zum Projekt beitragen kannst.</p>
         </div>
 
-        <form id="networkForm">
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" id="name" name="name" placeholder="Vollständiger Name" required>
+        <div>
+            <form id="networkForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" placeholder="Vollständiger Name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">E-Mail</label>
+                        <input type="email" id="email" name="email" placeholder="deine@email.de" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="phone">Telefon</label>
+                        <input type="tel" id="phone" name="phone" placeholder="+49 …">
+                    </div>
+                    <div class="form-group">
+                        <label for="field">Berufsfeld</label>
+                        <input type="text" id="field" name="field" placeholder="z.B. Architektur, Design …" required>
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="email">E-Mail</label>
-                    <input type="email" id="email" name="email" placeholder="deine@email.de" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="phone">Telefon</label>
-                    <input type="tel" id="phone" name="phone" placeholder="+49 …">
-                </div>
-
-                <div class="form-group">
-                    <label for="field">Berufsfeld / Hintergrund</label>
-                    <input type="text" id="field" name="field" placeholder="z.B. Architektur, Design, Recht …" required>
-                </div>
-
-                <div class="form-group full">
                     <label for="contribution">Was kann ich beitragen</label>
                     <textarea id="contribution" name="contribution"
                         placeholder="Beschreibe kurz, womit du das Projekt bereichern kannst …" required></textarea>
                 </div>
-            </div>
 
-            <div class="submit-row">
-                <button type="submit" id="submitBtn">Eintragen</button>
-                <span class="status" id="statusMsg"></span>
-            </div>
-        </form>
+                <div class="submit-row">
+                    <button type="submit" id="submitBtn">Eintragen</button>
+                    <span class="status" id="statusMsg"></span>
+                </div>
+            </form>
+        </div>
     </div>
 
     <div id="successScreen">
-        <h2>Danke für deinen Eintrag.</h2>
+        <h2>Danke für<br>deinen Eintrag.</h2>
         <p>Wir melden uns bei dir.</p>
     </div>
 </main>
 
 <section class="entries-section">
-    <div class="entries-inner">
-        <div class="entries-header">
-            <h2>Netzwerk</h2>
-            <span class="entry-count" id="entryCount"></span>
-        </div>
-        <div id="entriesContainer">
-            <p class="entries-status">Wird geladen …</p>
-        </div>
+    <div class="entries-header">
+        <h2>Netzwerk</h2>
+        <span class="entry-count" id="entryCount"></span>
+    </div>
+    <div id="entriesContainer">
+        <p class="entries-status">Wird geladen …</p>
     </div>
 </section>
 
 <footer>
     <span>&copy; 2026 ANN Architecture Solution</span>
-    <span>SCHAPRODE</span>
+    <span>Schaprode</span>
 </footer>
 
 <script>
@@ -392,7 +359,6 @@
     const submitBtn = document.getElementById('submitBtn');
     const statusMsg = document.getElementById('statusMsg');
 
-    // ── Formular absenden ──
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         submitBtn.disabled = true;
@@ -404,7 +370,7 @@
             name:         document.getElementById('name').value.trim(),
             email:        document.getElementById('email').value.trim(),
             phone:        document.getElementById('phone').value.trim(),
-            field:        document.getElementById('field').value,
+            field:        document.getElementById('field').value.trim(),
             contribution: document.getElementById('contribution').value.trim()
         };
 
@@ -427,7 +393,6 @@
         }
     });
 
-    // ── Einträge laden ──
     function esc(str) {
         if (!str) return '—';
         return String(str)
@@ -457,7 +422,7 @@
         [...data].reverse().forEach(row => {
             html += `<tr>
                 <td>${esc(row.name)}</td>
-                <td>${esc(row.field)}</td>
+                <td class="muted">${esc(row.field)}</td>
                 <td class="muted">${esc(row.email)}</td>
                 <td class="muted">${esc(row.contribution)}</td>
             </tr>`;
@@ -474,7 +439,7 @@
             const text = await res.text();
             const json = text.slice(text.indexOf('{'), text.lastIndexOf('}') + 1);
             const gviz = JSON.parse(json);
-            const val = (cell) => cell ? (cell.f || String(cell.v || '')) : '';
+            const val  = (cell) => cell ? (cell.f || String(cell.v || '')) : '';
             const data = ((gviz.table || {}).rows || []).map(row => ({
                 timestamp:    val(row.c[0]),
                 name:         val(row.c[1]),
