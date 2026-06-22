@@ -463,21 +463,27 @@
         container.innerHTML = html;
     }
 
-    function loadEntries() {
-        const old = document.getElementById('jsonpScript');
-        if (old) old.remove();
-
-        const script  = document.createElement('script');
-        script.id     = 'jsonpScript';
-        script.onerror = () => {
-            document.getElementById('entriesContainer').innerHTML =
-                '<p class="entries-status">Fehler beim Laden — bitte Seite neu laden.</p>';
-        };
-        script.src = APPS_SCRIPT_URL + '?callback=renderEntries&t=' + Date.now();
-        document.head.appendChild(script);
+    async function loadEntries() {
+        const container = document.getElementById('entriesContainer');
+        try {
+            const res  = await fetch('https://docs.google.com/spreadsheets/d/1HVc33FkfOxlVnrJ7hxp5e43JXIOD4g4OTpibIBCE3zQ/gviz/tq?tqx=out:json');
+            const text = await res.text();
+            const json = text.slice(text.indexOf('{'), text.lastIndexOf('}') + 1);
+            const gviz = JSON.parse(json);
+            const data = ((gviz.table || {}).rows || []).map(row => ({
+                timestamp:    row.c[0] ? String(row.c[0].v || '') : '',
+                name:         row.c[1] ? String(row.c[1].v || '') : '',
+                email:        row.c[2] ? String(row.c[2].v || '') : '',
+                phone:        row.c[3] ? String(row.c[3].v || '') : '',
+                field:        row.c[4] ? String(row.c[4].v || '') : '',
+                contribution: row.c[5] ? String(row.c[5].v || '') : ''
+            }));
+            renderEntries(data);
+        } catch (err) {
+            container.innerHTML = '<p class="entries-status">Fehler beim Laden.</p>';
+        }
     }
 
-    window.renderEntries = renderEntries;
     loadEntries();
 </script>
 
