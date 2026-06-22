@@ -470,13 +470,14 @@
             const text = await res.text();
             const json = text.slice(text.indexOf('{'), text.lastIndexOf('}') + 1);
             const gviz = JSON.parse(json);
+            const val = (cell) => cell ? (cell.f || String(cell.v || '')) : '';
             const data = ((gviz.table || {}).rows || []).map(row => ({
-                timestamp:    row.c[0] ? String(row.c[0].v || '') : '',
-                name:         row.c[1] ? String(row.c[1].v || '') : '',
-                email:        row.c[2] ? String(row.c[2].v || '') : '',
-                phone:        row.c[3] ? String(row.c[3].v || '') : '',
-                field:        row.c[4] ? String(row.c[4].v || '') : '',
-                contribution: row.c[5] ? String(row.c[5].v || '') : ''
+                timestamp:    val(row.c[0]),
+                name:         val(row.c[1]),
+                email:        val(row.c[2]),
+                phone:        val(row.c[3]),
+                field:        val(row.c[4]),
+                contribution: val(row.c[5])
             }));
             renderEntries(data);
         } catch (err) {
