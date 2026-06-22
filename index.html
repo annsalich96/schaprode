@@ -420,7 +420,7 @@
         }
     });
 
-    // ── Einträge laden via JSONP ──
+    // ── Einträge laden ──
     function esc(str) {
         if (!str) return '—';
         return String(str)
@@ -430,7 +430,7 @@
             .replace(/"/g, '&quot;');
     }
 
-    window.handleEntries = function(data) {
+    function renderEntries(data) {
         const container = document.getElementById('entriesContainer');
         const countEl   = document.getElementById('entryCount');
 
@@ -461,15 +461,17 @@
 
         html += '</tbody></table>';
         container.innerHTML = html;
-    };
+    }
 
-    function loadEntries() {
-        const old = document.getElementById('jsonpScript');
-        if (old) old.remove();
-        const script = document.createElement('script');
-        script.id  = 'jsonpScript';
-        script.src = APPS_SCRIPT_URL + '?callback=handleEntries&t=' + Date.now();
-        document.head.appendChild(script);
+    async function loadEntries() {
+        try {
+            const res  = await fetch(APPS_SCRIPT_URL);
+            const data = await res.json();
+            renderEntries(data);
+        } catch (err) {
+            document.getElementById('entriesContainer').innerHTML =
+                '<p class="entries-status">Fehler beim Laden — bitte Seite neu laden.</p>';
+        }
     }
 
     loadEntries();
