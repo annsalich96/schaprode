@@ -6,6 +6,25 @@ function doPost(e) {
     var data   = JSON.parse(e.postData.contents);
     var sheet  = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
 
+    // Eintrag bearbeiten
+    if (data.action === 'update') {
+      var lastRow = sheet.getLastRow();
+      if (lastRow > 1) {
+        var emails = sheet.getRange(2, 3, lastRow - 1, 1).getValues();
+        for (var i = 0; i < emails.length; i++) {
+          if (emails[i][0] === data.originalEmail) {
+            sheet.getRange(i + 2, 2, 1, 5).setValues([[
+              data.name, data.email, data.phone, data.field, data.contribution
+            ]]);
+            break;
+          }
+        }
+      }
+      return ContentService
+        .createTextOutput(JSON.stringify({ status: 'success' }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
     // Kopfzeile beim ersten Eintrag automatisch anlegen
     if (sheet.getLastRow() === 0) {
       var headers = ['Zeitstempel', 'Name', 'E-Mail', 'Telefon', 'Berufsfeld', 'Beitrag'];

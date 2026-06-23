@@ -221,20 +221,91 @@
             padding: 20px 0 16px;
         }
 
+        /* Eintrags-Zeilen — span 4, inneres Grid */
+        .entry-row {
+            grid-column: span 4;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            column-gap: var(--gutter);
+            border-top: 1px solid var(--gray-100);
+        }
+
         /* Eintrags-Zellen — jede in einer Grid-Spalte */
         .entry-cell {
             font-size: 14px;
             color: var(--black);
             padding: 20px 0;
-            border-top: 1px solid var(--gray-100);
             line-height: 1.55;
-            vertical-align: top;
         }
 
         .entry-cell.muted {
-            color: var(--gray-600);
+            color: var(--black);
             font-size: 13px;
         }
+
+        .name-cell {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        /* Bearbeiten-Button */
+        .edit-btn {
+            background: none;
+            border: none;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--gray-400);
+            cursor: pointer;
+            font-family: inherit;
+            padding: 0;
+            flex-shrink: 0;
+            transition: color 0.15s;
+        }
+        .edit-btn:hover { color: var(--black); }
+
+        /* Inline-Editformular */
+        .entry-edit-form {
+            display: none;
+            grid-column: span 4;
+            padding: 24px 0 28px;
+        }
+        .entry-row.editing > .entry-cell { display: none; }
+        .entry-row.editing .entry-edit-form { display: block; }
+
+        .save-btn {
+            background: var(--black);
+            color: var(--white);
+            border: none;
+            padding: 14px 36px;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-family: inherit;
+            transition: opacity 0.15s;
+        }
+        .save-btn:hover    { opacity: 0.65; }
+        .save-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+        .cancel-btn {
+            background: none;
+            border: none;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--gray-600);
+            cursor: pointer;
+            font-family: inherit;
+            padding: 0;
+            transition: color 0.15s;
+        }
+        .cancel-btn:hover { color: var(--black); }
 
         .entries-status {
             grid-column: span 4;
@@ -349,7 +420,7 @@
     <!-- Header-Zeile im Grid -->
     <div class="grid">
         <div class="col-4 entries-head">
-            <h2>Netzwerk</h2>
+            <h2>Beteiligte</h2>
             <span class="entry-count" id="entryCount"></span>
         </div>
     </div>
@@ -362,7 +433,7 @@
 
 <footer>
     <span>&copy; 2026 ANN Architecture Solution</span>
-    <span>Schaprode</span>
+    <span>Projekt Schaprode</span>
 </footer>
 
 <script>
@@ -427,7 +498,6 @@
 
         countEl.textContent = data.length + (data.length === 1 ? ' Person' : ' Personen');
 
-        // Grid-Divs statt Tabelle — jede Zelle sitzt auf einer Grid-Spalte
         let html =
             '<div class="entry-col-header">Name</div>' +
             '<div class="entry-col-header">Berufsfeld</div>' +
@@ -435,14 +505,91 @@
             '<div class="entry-col-header">Beitrag</div>';
 
         [...data].reverse().forEach(row => {
-            html +=
-                `<div class="entry-cell">${esc(row.name)}</div>` +
-                `<div class="entry-cell muted">${esc(row.field)}</div>` +
-                `<div class="entry-cell muted">${esc(row.email)}</div>` +
-                `<div class="entry-cell muted">${esc(row.contribution)}</div>`;
+            html += `
+            <div class="entry-row" data-original-email="${esc(row.email)}">
+                <div class="entry-cell name-cell">
+                    <span>${esc(row.name)}</span>
+                    <button class="edit-btn" onclick="startEdit(this)">Bearbeiten</button>
+                </div>
+                <div class="entry-cell muted">${esc(row.field)}</div>
+                <div class="entry-cell muted">${esc(row.email)}</div>
+                <div class="entry-cell muted">${esc(row.contribution)}</div>
+                <div class="entry-edit-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" class="edit-name" value="${esc(row.name)}">
+                        </div>
+                        <div class="form-group">
+                            <label>E-Mail</label>
+                            <input type="email" class="edit-email" value="${esc(row.email)}">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Telefon</label>
+                            <input type="tel" class="edit-phone" value="${esc(row.phone || '')}">
+                        </div>
+                        <div class="form-group">
+                            <label>Berufsfeld</label>
+                            <input type="text" class="edit-field" value="${esc(row.field)}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Was ich beitragen kann</label>
+                        <textarea class="edit-contribution">${esc(row.contribution)}</textarea>
+                    </div>
+                    <div class="submit-row">
+                        <button class="save-btn" onclick="saveEdit(this)">Speichern</button>
+                        <button class="cancel-btn" type="button" onclick="cancelEdit(this)">Abbrechen</button>
+                        <span class="edit-status status"></span>
+                    </div>
+                </div>
+            </div>`;
         });
 
         container.innerHTML = html;
+    }
+
+    function startEdit(btn) {
+        btn.closest('.entry-row').classList.add('editing');
+    }
+
+    function cancelEdit(btn) {
+        btn.closest('.entry-row').classList.remove('editing');
+    }
+
+    async function saveEdit(btn) {
+        const row      = btn.closest('.entry-row');
+        const statusEl = row.querySelector('.edit-status');
+        btn.disabled   = true;
+        statusEl.textContent = 'Wird gespeichert …';
+        statusEl.className   = 'edit-status status';
+
+        const payload = {
+            action:        'update',
+            originalEmail: row.dataset.originalEmail,
+            name:          row.querySelector('.edit-name').value.trim(),
+            email:         row.querySelector('.edit-email').value.trim(),
+            phone:         row.querySelector('.edit-phone').value.trim(),
+            field:         row.querySelector('.edit-field').value.trim(),
+            contribution:  row.querySelector('.edit-contribution').value.trim()
+        };
+
+        try {
+            await fetch(APPS_SCRIPT_URL, {
+                method:  'POST',
+                mode:    'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body:    JSON.stringify(payload)
+            });
+            row.classList.remove('editing');
+            setTimeout(loadEntries, 1200);
+        } catch (err) {
+            statusEl.textContent = 'Fehler — bitte erneut versuchen.';
+            statusEl.className   = 'edit-status status error';
+            btn.disabled = false;
+        }
     }
 
     async function loadEntries() {
