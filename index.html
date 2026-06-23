@@ -162,27 +162,6 @@
         .status.success { color: var(--success); }
         .status.error   { color: var(--error); }
 
-        /* ── Danke-Seite ── */
-        #successScreen {
-            display: none;
-            padding: 80px var(--margin) 96px;
-        }
-
-        #successScreen h2 {
-            font-size: 36px;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            line-height: 1.15;
-            margin-bottom: 20px;
-            max-width: 50%;
-        }
-
-        #successScreen p {
-            font-size: 15px;
-            color: var(--gray-600);
-            line-height: 1.75;
-        }
-
         /* ── Einträge — gleicher Grid, selbe Spaltenlinien ── */
         .entries-section { border-top: 1px solid var(--gray-200); flex: 1; }
 
@@ -341,7 +320,6 @@
             .grid { grid-template-columns: 1fr; }
             .col-2, .col-4 { grid-column: span 1; }
             .form-row { grid-template-columns: 1fr; }
-            #successScreen h2 { max-width: none; font-size: 28px; }
             .entry-col-header:nth-child(n+3),
             .entry-cell:nth-child(4n+3),
             .entry-cell:nth-child(4n)   { display: none; }
@@ -409,11 +387,6 @@
     </div>
 </div>
 
-<!-- Danke-Seite -->
-<div id="successScreen">
-    <h2>Danke für<br>deinen Eintrag.</h2>
-    <p>Wir melden uns bei dir.</p>
-</div>
 
 <!-- Einträge — gleicher Grid wie oben -->
 <section class="entries-section">
@@ -466,9 +439,11 @@
                 body: JSON.stringify(payload)
             });
 
-            document.getElementById('formSection').style.display = 'none';
-            document.getElementById('successScreen').style.display = 'block';
-            setTimeout(loadEntries, 1500);
+            form.reset();
+            submitBtn.disabled = false;
+            statusMsg.textContent = 'Eingetragen.';
+            statusMsg.className = 'status success';
+            loadEntries();
 
         } catch (err) {
             statusMsg.textContent = 'Verbindungsfehler — bitte versuche es erneut.';
